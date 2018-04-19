@@ -9,7 +9,7 @@
 int smfold_encode (char *inputData, int numBytes, FILE *outputFile)
 {
 	fwrite (inputData, numBytes, 1, outputFile); // trivial encoding
-	fflush(outputFile);
+//	fflush(outputFile);
 	return (0);
 }
 
@@ -59,15 +59,16 @@ int main(int argc, char** argv) {
 	std::ifstream  fl(inputFilename, std::ios::in | std::ios::binary); // Read from disk into data array
 	fl.seekg(0, std::ios::end);
 	size_t len = fl.tellg();
-	char *inputData = new char[len];
+	char *inputData = new char[len+1]; // extra character for null terminator
 	fl.seekg(0, std::ios::beg);
 	fl.read(inputData, len);
 	fl.close();
+	inputData[len + 1] = '\0';
 	if (DEBUG) std::cout << "Length of input data: " << len << std::endl;
 	if (DEBUG) std::cout << "Input file contains: " << inputData << std::endl;
 	if (DEBUG) for (int i = 0; i < len; i++) std::cout << i << "\'" << inputData[i] << "\'" << std::endl;
 
-	err = fopen_s(&outputFile, outputFilename, "w");
+	err = fopen_s(&outputFile, outputFilename, "wb");
 	if (err) {
 		std::cout << "Unable to write file " << outputFilename << std::endl;
 		return (1);
