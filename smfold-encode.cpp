@@ -6,12 +6,12 @@
 /////////////////////////////////////////////////////
 // Read a file; encode it; write the encoded result.
  
-int smfold_encode(char *inputData, int numBytes, FILE *outputFile)
+int smfold_encode (char *inputData, int numBytes, FILE *outputFile)
 {
 	fwrite (inputData, numBytes, 1, outputFile); // trivial encoding
+	fflush(outputFile);
 	return (0);
 }
-
 
 /////////////////////////////////////////////////////
 // main()
@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 		std::cout << "Unable to read  file " << inputFilename << std::endl;
 		return (1);
 	}
-	std::ifstream  fl(inputFilename); // Read from disk into data array
+	std::ifstream  fl(inputFilename, std::ios::in | std::ios::binary); // Read from disk into data array
 	fl.seekg(0, std::ios::end);
 	size_t len = fl.tellg();
 	char *inputData = new char[len];
@@ -65,6 +65,7 @@ int main(int argc, char** argv) {
 	fl.close();
 	if (DEBUG) std::cout << "Length of input data: " << len << std::endl;
 	if (DEBUG) std::cout << "Input file contains: " << inputData << std::endl;
+	if (DEBUG) for (int i = 0; i < len; i++) std::cout << i << "\'" << inputData[i] << "\'" << std::endl;
 
 	err = fopen_s(&outputFile, outputFilename, "w");
 	if (err) {
